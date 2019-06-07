@@ -120,7 +120,7 @@ export class Trader extends React.Component {
 								<h2>Obchody</h2>
 							</div>
 							{this.state.trades.map((trade) => {
-								return <Trade trade={trade} key={trade.time} onClose={this.closeTrade}/>
+								return <Trade trade={trade} key={trade.id} onClose={this.closeTrade}/>
 							})}
 							<div className="row result">
 								Zisk/ztráta: {this.profit.toFixed(3)} €
