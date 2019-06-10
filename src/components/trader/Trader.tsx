@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {Chart} from '../chart/Chart'
 import {Trade} from '../trade/Trade'
 
 enum TradeType {
-  'BUY',
-  'SELL'
+  BUY = 'BUY',
+  SELL = 'SELL'
 }
 
 export type ITrade = {
@@ -29,7 +29,7 @@ export class Trader extends React.Component<{}, TraderState> {
     trades: []
   };
 
-  get profit() {
+  get profit(): number {
     const profit: any = this.state.trades.reduce((curVal, trade) => {
       if (!trade.closePrice || !trade.openPrice) {
         return curVal
@@ -43,21 +43,21 @@ export class Trader extends React.Component<{}, TraderState> {
     return profit * 1000
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.updateActualPrice();
     this.intervalId = setInterval(() => {
       this.updateActualPrice()
     }, 5000)
   }
 
-  updateActualPrice = async () => {
+  updateActualPrice = async (): Promise<void> => {
     const actualPrice = await this.getActualRate();
     this.setState({
-      actualPrice: actualPrice as number
+      actualPrice: actualPrice
     })
   };
 
-  addBuyTrade = () => {
+  addBuyTrade = (): void => {
     const newTrade: ITrade = {
       id: Trader._tradeIdIterator++,
       openPrice: this.state.actualPrice,
@@ -70,7 +70,7 @@ export class Trader extends React.Component<{}, TraderState> {
     }))
   };
 
-  addSellTrade = () => {
+  addSellTrade = (): void => {
     const newTrade = {
       id: Trader._tradeIdIterator++,
       openPrice: this.state.actualPrice,
@@ -83,14 +83,17 @@ export class Trader extends React.Component<{}, TraderState> {
     }))
   };
 
-  getActualRate = async () => {
+  getActualRate = async (): Promise<number | undefined> => {
     return new Promise(resolve => {
-      fetch('https://cors.io/?https://www.freeforexapi.com/api/live?pairs=EURUSD')
+      // fetch('https://cors.io/?https://www.freeforexapi.com/api/live?pairs=EURUSD')
+      fetch('https://api.exchangeratesapi.io/latest?symbols=USD')
         .then(function (response) {
           return response.json()
         })
         .then((res) => {
-          const rate = res.rates.EURUSD.rate;
+          console.log(res);
+          // const rate = res.rates.EURUSD.rate;
+          const rate = res.rates.USD;
           // const makeItFunny = 0
           const makeItFunny = (Math.random() - 0.5) / 100;
           resolve(rate + makeItFunny)
@@ -101,7 +104,7 @@ export class Trader extends React.Component<{}, TraderState> {
     })
   };
 
-  closeTrade = (tradeId: number) => {
+  closeTrade = (tradeId: number): void => {
     this.setState((state) => {
       const trades = state.trades.map(trade => {
         if (trade.id === tradeId) {
@@ -115,7 +118,7 @@ export class Trader extends React.Component<{}, TraderState> {
     })
   };
 
-  render() {
+  render(): ReactElement {
     return (
       <div className="app container">
         <div className="row">
@@ -157,7 +160,7 @@ export class Trader extends React.Component<{}, TraderState> {
     )
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     clearInterval(this.intervalId)
   }
 }

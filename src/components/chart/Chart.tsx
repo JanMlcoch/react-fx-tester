@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import './Chart.css'
 
-export const Chart = () => {
+export const Chart = (): ReactElement => {
 	return (
 		<iframe
 			id="tradingview_bde47"

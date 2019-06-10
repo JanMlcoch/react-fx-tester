@@ -1,21 +1,20 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import './Trade.css'
-import { connectTranslate } from '../../utils/translate'
+import {connectTranslate, WithTranslateProps} from '../../utils/translate'
 import {ITrade} from '../trader/Trader';
 
-interface TradeProps {
+interface TradeProps extends WithTranslateProps {
   onClose: (id: number) => void;
   trade: ITrade
-  t: (term: string) => string;
 }
 
 class TradeInternal extends React.Component<TradeProps> {
 
-	closeTrade = () => {
+	closeTrade = (): void => {
 		this.props.onClose(this.props.trade.id)
 	};
 
-	render() {
+	render(): ReactElement {
 		const {trade, t} = this.props;
 		return (
 			<div className={`row ${trade.closePrice && 'trade--closed'}`}>
