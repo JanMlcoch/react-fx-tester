@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {connectTranslate, WithTranslateProps} from '../../utils/translate';
 
 class ContactInternal extends React.Component<WithTranslateProps> {
