@@ -1,4 +1,4 @@
-import React, {Component, ComponentType, FunctionComponent} from 'react'
+import React, {Component} from 'react'
 
 export interface WithTranslateProps {
   t: (term: string) => string;
