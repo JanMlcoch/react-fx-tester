@@ -15,22 +15,26 @@ export type ITrade = {
   time: Date;
 }
 
-interface TraderState {
-  actualPrice?: number;
-  trades: ITrade[];
+interface TraderProps {
+  trades: any;
+  addTrade: any;
+  closeTrade: any;
 }
 
-export class Trader extends React.Component<{}, TraderState> {
+interface TraderState {
+  actualPrice?: number;
+}
+
+export class Trader extends React.Component<TraderProps, TraderState> {
   static _tradeIdIterator = 0;
   intervalId: any;
 
   state: TraderState = {
     actualPrice: undefined,
-    trades: []
   };
 
   get profit(): number {
-    const profit: any = this.state.trades.reduce((curVal, trade) => {
+    const profit: any = this.props.trades.reduce((curVal: any, trade: ITrade) => {
       if (!trade.closePrice || !trade.openPrice) {
         return curVal
       }
@@ -65,9 +69,7 @@ export class Trader extends React.Component<{}, TraderState> {
       type: TradeType.BUY,
       time: new Date()
     };
-    this.setState((state) => ({
-      trades: [newTrade, ...state.trades]
-    }))
+    this.props.addTrade(newTrade);
   };
 
   addSellTrade = (): void => {
@@ -78,9 +80,7 @@ export class Trader extends React.Component<{}, TraderState> {
       type: TradeType.SELL,
       time: new Date()
     };
-    this.setState((state) => ({
-      trades: [newTrade, ...state.trades]
-    }))
+    this.props.addTrade(newTrade);
   };
 
   getActualRate = async (): Promise<number | undefined> => {
@@ -101,20 +101,6 @@ export class Trader extends React.Component<{}, TraderState> {
         .catch(() => {
           resolve(undefined)
         })
-    })
-  };
-
-  closeTrade = (tradeId: number): void => {
-    this.setState((state) => {
-      const trades = state.trades.map(trade => {
-        if (trade.id === tradeId) {
-          return {...trade, closePrice: this.state.actualPrice}
-        }
-        return trade
-      });
-      return {
-        trades
-      }
     })
   };
 
@@ -140,8 +126,8 @@ export class Trader extends React.Component<{}, TraderState> {
               <div className="row">
                 <h2>Obchody</h2>
               </div>
-              {this.state.trades.map((trade) => {
-                return <Trade trade={trade} key={trade.id} onClose={this.closeTrade}/>
+              {this.props.trades.map((trade: any) => {
+                return <Trade trade={trade} key={trade.id} onClose={this.props.closeTrade}/>
               })}
               <div className="row result">
                 Zisk/ztráta: {this.profit.toFixed(3)} €

@@ -3,6 +3,7 @@ import './App.css'
 import { Trader } from './components/trader/Trader'
 import { NavLink, Route, BrowserRouter as Router } from 'react-router-dom'
 import { Contact } from './components/contact/Contact'
+import TraderCont from './containers/traderCont'
 
 function App() {
 	return (
@@ -22,7 +23,7 @@ function App() {
 				</div>
 			</nav>
 			<div className="app container">
-				<Route path="/" exact component={Trader} />
+				<Route path="/" exact component={TraderCont} />
 				<Route path="/contact/" component={Contact} />
 			</div>
 		</Router>
