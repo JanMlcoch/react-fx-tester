@@ -1,15 +1,15 @@
-import React, {Component} from 'react'
+import React from 'react'
 
 export interface WithTranslateProps {
   t: (term: string) => string;
 }
 
-const en: {[key: string]: string} = {
-  ['Zavřít']: 'Close'
+const en: { [key: string]: string } = {
+  'Zavřít': 'Close'
 };
 
-const cz: {[key: string]: string} = {
-  ['Zavřít']: 'Zavřít'
+const cz: { [key: string]: string } = {
+  'Zavřít': 'Zavřít'
 };
 
 const lang = 'en';
@@ -24,5 +24,5 @@ export const connectTranslate = <P extends WithTranslateProps>(
     return lib[term] ? lib[term] : term;
   };
 
-  return <Component {...props as P} t={translate} />;
+  return <Component {...props as P} t={translate}/>;
 };

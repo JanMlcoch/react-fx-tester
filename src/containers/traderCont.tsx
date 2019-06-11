@@ -1,17 +1,18 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {addTrade, closeTrade} from '../actions'
-import {Trader} from '../components/trader/Trader';
+import {Trader, TradeType} from '../components/trader/Trader';
 
 const mapStateToProps = (state: any) => ({
-  trades: state.trades
-})
+  trades: state.trades,
+  actualRate: state.rate.rate
+});
 
 const mapDispatchToProps = (dispatch: any) => ({
-  addTrade: (newTrade: any) => dispatch(addTrade(newTrade)),
-  closeTrade: (tradeId: any) => dispatch(closeTrade(tradeId))
-})
+  addTrade: (newTrade: { openPrice: number, type: TradeType }) => dispatch(addTrade(newTrade)),
+  closeTrade: (tradeId: number, closePrice: number) => dispatch(closeTrade(tradeId, closePrice)),
+});
 
-export default connect(
+export const TraderCont = connect(
   mapStateToProps,
   mapDispatchToProps
 )(Trader);

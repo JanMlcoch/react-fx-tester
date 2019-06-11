@@ -1,8 +1,9 @@
 import React, {ReactElement} from 'react'
 import {Chart} from '../chart/Chart'
 import {Trade} from '../trade/Trade'
+import {ProfitCont} from '../../containers/profitCont';
 
-enum TradeType {
+export enum TradeType {
   BUY = 'BUY',
   SELL = 'SELL'
 }
@@ -16,92 +17,26 @@ export type ITrade = {
 }
 
 interface TraderProps {
-  trades: any;
-  addTrade: any;
-  closeTrade: any;
+  trades: ITrade[];
+  addTrade: ({openPrice, type}: {openPrice: number, type: TradeType}) => void;
+  closeTrade: (tradeId: number, closePrice: number) => void;
+  actualRate: number;
 }
 
-interface TraderState {
-  actualPrice?: number;
-}
-
-export class Trader extends React.Component<TraderProps, TraderState> {
-  static _tradeIdIterator = 0;
-  intervalId: any;
-
-  state: TraderState = {
-    actualPrice: undefined,
-  };
-
-  get profit(): number {
-    const profit: any = this.props.trades.reduce((curVal: any, trade: ITrade) => {
-      if (!trade.closePrice || !trade.openPrice) {
-        return curVal
-      }
-      if (trade.type === TradeType.BUY) {
-        return curVal + trade.closePrice - trade.openPrice
-      } else {
-        return curVal + trade.openPrice - trade.closePrice
-      }
-    }, 0);
-    return profit * 1000
-  }
-
-  componentDidMount(): void {
-    this.updateActualPrice();
-    this.intervalId = setInterval(() => {
-      this.updateActualPrice()
-    }, 5000)
-  }
-
-  updateActualPrice = async (): Promise<void> => {
-    const actualPrice = await this.getActualRate();
-    this.setState({
-      actualPrice: actualPrice
-    })
-  };
+export class Trader extends React.Component<TraderProps> {
 
   addBuyTrade = (): void => {
-    const newTrade: ITrade = {
-      id: Trader._tradeIdIterator++,
-      openPrice: this.state.actualPrice,
-      closePrice: undefined,
-      type: TradeType.BUY,
-      time: new Date()
-    };
-    this.props.addTrade(newTrade);
+    this.props.addTrade({
+      openPrice: this.props.actualRate,
+      type: TradeType.BUY
+    });
   };
 
   addSellTrade = (): void => {
-    const newTrade = {
-      id: Trader._tradeIdIterator++,
-      openPrice: this.state.actualPrice,
-      closePrice: undefined,
-      type: TradeType.SELL,
-      time: new Date()
-    };
-    this.props.addTrade(newTrade);
-  };
-
-  getActualRate = async (): Promise<number | undefined> => {
-    return new Promise(resolve => {
-      // fetch('https://cors.io/?https://www.freeforexapi.com/api/live?pairs=EURUSD')
-      fetch('https://api.exchangeratesapi.io/latest?symbols=USD')
-        .then(function (response) {
-          return response.json()
-        })
-        .then((res) => {
-          console.log(res);
-          // const rate = res.rates.EURUSD.rate;
-          const rate = res.rates.USD;
-          // const makeItFunny = 0
-          const makeItFunny = (Math.random() - 0.5) / 100;
-          resolve(rate + makeItFunny)
-        })
-        .catch(() => {
-          resolve(undefined)
-        })
-    })
+    this.props.addTrade({
+      openPrice: this.props.actualRate,
+      type: TradeType.SELL
+    });
   };
 
   render(): ReactElement {
@@ -117,7 +52,7 @@ export class Trader extends React.Component<TraderProps, TraderState> {
           <div className="col-4">
             <div className="container">
               <div className="row">
-                Aktuální cena: {this.state.actualPrice && this.state.actualPrice.toFixed(4)}
+                Aktuální cena: {this.props.actualRate && this.props.actualRate.toFixed(4)}
               </div>
               <div className="row">
                 <button onClick={this.addBuyTrade} className="controls__button">Buy</button>
@@ -126,12 +61,10 @@ export class Trader extends React.Component<TraderProps, TraderState> {
               <div className="row">
                 <h2>Obchody</h2>
               </div>
-              {this.props.trades.map((trade: any) => {
-                return <Trade trade={trade} key={trade.id} onClose={this.props.closeTrade}/>
+              {this.props.trades.map((trade: ITrade) => {
+                return <Trade trade={trade} key={trade.id} onClose={this.props.closeTrade} actualRate={this.props.actualRate}/>
               })}
-              <div className="row result">
-                Zisk/ztráta: {this.profit.toFixed(3)} €
-              </div>
+              <ProfitCont/>
             </div>
           </div>
           <a href="https://www.freeforexapi.com">
@@ -144,9 +77,5 @@ export class Trader extends React.Component<TraderProps, TraderState> {
         </div>
       </div>
     )
-  }
-
-  componentWillUnmount(): void {
-    clearInterval(this.intervalId)
   }
 }
