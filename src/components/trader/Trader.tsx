@@ -31,7 +31,7 @@ export class Trader extends React.Component<{}, TraderState> {
 
   get profit(): number {
     const profit: any = this.state.trades.reduce((curVal, trade) => {
-      if (!trade.closePrice || !trade.openPrice) {
+      if (trade.closePrice === undefined || trade.openPrice === undefined) {
         return curVal
       }
       if (trade.type === TradeType.BUY) {
