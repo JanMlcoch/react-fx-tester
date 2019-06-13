@@ -9,21 +9,41 @@ function App() {
 		<Router>
 			<nav className="navbar navbar-expand-lg navbar-light bg-light">
 				<a className="navbar-brand" href="#">Fx tester</a>
-				<button className="navbar-toggler" type="button" data-toggle="collapse"
-				        data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-				        aria-label="Toggle navigation">
+				<button
+					className="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbarNavAltMarkup"
+					aria-controls="navbarNavAltMarkup"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
 					<span className="navbar-toggler-icon"></span>
 				</button>
 				<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div className="navbar-nav">
-						<NavLink to="/" activeClassName="active" className="nav-item nav-link" href="#">Trader <span className="sr-only">(current)</span></NavLink>
-						<NavLink to="/user" activeClassName="active" className="nav-item nav-link" href="#">User</NavLink>
+						<NavLink
+							to="/"
+							activeClassName="active"
+							className="nav-item nav-link"
+							href="#"
+						>
+							Trader
+						</NavLink>
+						<NavLink
+							to="/user"
+							activeClassName="active"
+							className="nav-item nav-link"
+							href="#"
+						>
+							User
+						</NavLink>
 					</div>
 				</div>
 			</nav>
 			<div className="app container">
-				<Route path="/" exact component={Trader} />
-				<Route path="/user/" component={User} />
+				<Route path="/" exact component={Trader}/>
+				<Route path="/user/" component={User}/>
 			</div>
 		</Router>
 	)
