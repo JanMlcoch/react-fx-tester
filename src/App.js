@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import { Trader } from './components/trader/Trader'
 import { NavLink, Route, BrowserRouter as Router } from 'react-router-dom'
-import { Contact } from './components/contact/Contact'
+import { User } from './components/user/User'
 
 function App() {
 	return (
@@ -17,13 +17,13 @@ function App() {
 				<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div className="navbar-nav">
 						<NavLink to="/" activeClassName="active" className="nav-item nav-link" href="#">Trader <span className="sr-only">(current)</span></NavLink>
-						<NavLink to="/contact" activeClassName="active" className="nav-item nav-link" href="#">Contact</NavLink>
+						<NavLink to="/user" activeClassName="active" className="nav-item nav-link" href="#">User</NavLink>
 					</div>
 				</div>
 			</nav>
 			<div className="app container">
 				<Route path="/" exact component={Trader} />
-				<Route path="/contact/" component={Contact} />
+				<Route path="/user/" component={User} />
 			</div>
 		</Router>
 	)
